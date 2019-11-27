@@ -1,5 +1,14 @@
-import React, { Component, Button } from 'react';
-import '../home.css';
+import React, { Component } from 'react';
+import Button               from 'react-bootstrap/Button';
+import { Heading }          from './Heading';
+import { Vendor }           from './Vendor';
+import { RateCodes }        from './RateCodes';
+import { PaymentTypes }     from './PaymentTypes';
+import { NumPassengers }    from './NumPassengers';
+import { TripDistance }     from './TripDistance';
+import { Result }           from './Result';
+import '../site.css';
+
 const axios = require('axios').default;
 
 export class Home extends Component {
@@ -7,15 +16,16 @@ export class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            vendor : "CMT",
+            vendor: "CMT",
             vendors: [],
-            rate: "0",
+            rate: "",
             rates: [],
             payType:"CRD",
             payTypes: [],
             numPassenger: "1",
             numPassengers: [],
-            tripDis: "5"
+            tripDis: "5",
+            result: ""
         };
 
         fetch('api/SampleData/LoadData')
@@ -30,11 +40,19 @@ export class Home extends Component {
             });
     }
 
+    // handlers passed to sub-components
+    handleChangeVendor          = e => this.setState({ vendor: e.target.value });
+    handleChangeRate            = e => this.setState({ rate: e.target.value });
+    handleChangePayType         = e => this.setState({ payType: e.target.value });
+    handleChangeNumPassenger    = e => this.setState({ numPassenger: e.target.value });
+    handleChangeTripDis         = e => this.setState({ tripDis: e.target.value });
+
     tripDisHandler = (event) => {
         this.setState({ tripDis: event.target.value });
     }
 
-    getPrediction = () =>{
+    getPrediction = () => {
+        var self = this;
         axios.post('/api/SampleData/GetPrediction', {
             VendorId:       this.state.vendor,
             RateCode:       this.state.rate,
@@ -42,7 +60,8 @@ export class Home extends Component {
             PassengerCount: this.state.numPassenger,
             TripDistance:   this.state.tripDis
          })
-         .then(function (response) {
+        .then(function (response) {
+            self.setState({ result: response.data });
             document.getElementById("result").innerHTML = "Predicted Fare Amount is: " + response.data;
             console.log(response);
          })
@@ -53,42 +72,17 @@ export class Home extends Component {
 
   render() {
       return (
-      <div>
-            <div className="h1" style={{ margin: '10px' }} >NY Taxi Fare Prediction</div>
-            <hr />
+          <div>
+                <Heading headingText='NY Taxi Fare Prediction'/>
             <div>
-                  <label><b>Vendor Id</b></label>
-                  <select name="vendor" onChange={(e) => this.setState({ vendor: e.target.value })}>
-                      {this.state.vendors.map((v) => {
-                        return  <option key={v} value={v}>{v}</option>;
-                      })}
-                  </select>
-                  <label><b>Rate Codes</b></label>
-                  <select name="rateCodes" onChange={(e) => this.setState({ rate: e.target.value })}>
-                      {this.state.rates.map((r) => {
-                          return <option key={r} value={r}>{r}</option>;
-                      })}
-                  </select>
-                  <label><b>Payment Types</b></label>
-                  <select name="payTypes" onChange={(e) => this.setState({ payType: e.target.value })}>
-                      {this.state.payTypes.map((p) => {
-                          return <option key={p} value={p}>{p}</option>;
-                      })}
-                  </select>
-                    <label><b>Number Passengers</b></label>
-                    <select name="numberPassengers" onChange={(e) => this.setState({ numPassenger: e.target.value })}>
-                        {this.state.numPassengers.map((p) => {
-                            return <option key={p} value={p}>{p}</option>;
-                        })}
-                  </select>
-                  <label><b>Trip Distance</b></label>
-                  <input type="text" className="text-right" value={this.state.tripDis} onChange={this.tripDisHandler} placeholder="in Miles" id="tripDis" />
-                  &nbsp;
-                  <button type="button" id="btnSubmit" className="btn btn-sm btn-primary" onClick={this.getPrediction}>Submit</button>
+                <Vendor        vendors={this.state.vendors}             onChangeValue={this.handleChangeVendor} />
+                <RateCodes     rates={this.state.rates}                 onChangeValue={this.handleChangeRate} />
+                <PaymentTypes  payTypes={this.state.payTypes}           onChangeValue={this.handleChangePayType} />
+                <NumPassengers numPassengers={this.state.numPassengers} onChangeValue={this.handleChangeNumPassenger} />
+                <TripDistance  tripDis={this.state.tripDis}             onChangeValue={this.handleChangeTripDis} />
+                <Button style={{ marginLeft: '10px' }}  variant='primary' size='sm' onClick={this.getPrediction} >Submit</Button>
               </div>
-              <div className="clearfix" />
-              <div id='result' className="h4" style={{ margin: '10px' }} />
-
+              <Result result={this.state.result}  />
        </div>
     );
   }
