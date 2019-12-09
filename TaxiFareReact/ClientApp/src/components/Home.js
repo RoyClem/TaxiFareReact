@@ -38,6 +38,16 @@ export class Home extends Component {
                     numPassengers: data.numPass
                 });
             });
+
+        //axios.get('api/SampleData/LoadData')
+        //    .then(response => {
+        //        this.setState({
+        //            vendors: response.data.vendors,
+        //            rates: response.data.rates,
+        //            payTypes: response.data.payTypes,
+        //            numPassengers: response.data.numPass
+        //        });
+        //    });
     }
 
     // handlers passed to sub-components

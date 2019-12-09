@@ -8,34 +8,19 @@ using TaxiFareReact.Models;
 
 namespace TaxiFareReact.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class SampleDataController : Controller
+    public class SampleDataController : ControllerBase
     {
         static readonly string _TaxiFarePath = Path.Combine(Environment.CurrentDirectory, "Data", "taxi-fare.csv");
         static readonly string _ModelPath    = Path.Combine(Environment.CurrentDirectory, "Data", "Model.zip");
-
-        public class WeatherForecast
-        {
-            public string DateFormatted { get; set; }
-            public int TemperatureC { get; set; }
-            public string Summary { get; set; }
-
-            public int TemperatureF
-            {
-                get
-                {
-                    return 32 + (int)(TemperatureC / 0.5556);
-                }
-            }
-        }
-
+       
         [HttpGet("[action]")]
         public JsonResult LoadData()
         {
             List<string> vendors = new List<string>();
             List<string> rates = new List<string>();
             List<string> payTypes = new List<string>();
-            List<WeatherForecast> forecasts = new List<WeatherForecast>();
 
             using (var reader = new StreamReader(_TaxiFarePath))
             {
