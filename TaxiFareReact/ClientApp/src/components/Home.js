@@ -73,7 +73,7 @@ export class Home extends Component {
         .then(function (response) {
             self.setState({ result: response.data });
             document.getElementById("result").innerHTML = "Predicted Fare Amount is: " + response.data;
-            console.log(response);
+       //     console.log(response);
          })
         .catch(function (error) {
              console.log(error);

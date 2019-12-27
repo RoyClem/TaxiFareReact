@@ -1,13 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Alert from 'react-bootstrap/Alert';
 
-export class Heading extends Component {
-
-  render() {
-      return (
+export function Heading(props)  {
+    return (
         <Alert variant="info" transition=''>
-              <Alert.Heading>{this.props.headingText}</Alert.Heading>
+                <Alert.Heading>{props.headingText}</Alert.Heading>
         </Alert>
     );
-  }
 }

@@ -1,17 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-export class Result extends Component {
-    constructor(props) {
-        super(props);
+export function Result(props) {
 
-        if (!this.props.result)
-            return null;
-    }
-    render() {
+    if (props.result) {
         return (
             <React.Fragment>
-                <div id='result' className="h4" style={{ margin: '10px' }}  />
+                <div id='result' className="h4" style={{ margin: '10px' }} />
             </React.Fragment>
         );
     }
+    else
+        return null;
 }
